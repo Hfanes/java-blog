@@ -4,14 +4,15 @@ import com.hfa.blog.domain.dtos.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@ControllerAdvice
-@Slf4j
+@RestController//Marks this as a REST controller that returns JSON responses.
+@ControllerAdvice //Tells Spring that this class should globally handle exceptions thrown by controllers.
+@Slf4j //Lombok annotation that creates a logger instance (log) so you can write logs like log.error(...).
 public class ErrorController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleException(Exception exception) {
@@ -25,10 +26,37 @@ public class ErrorController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse>  handleIllegalArgumentException(IllegalArgumentException exception) {
+        log.warn("IllegalArgumentException occurred", exception);
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(exception.getMessage())
+                //in production we should use
+                //.message("Invalid request. Please review your input.")
                 .build();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalStateException(IllegalStateException exception) {
+        log.warn("IllegalStateException occurred", exception);
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value()) //409
+                .message(exception.getMessage())
+                //in prod
+                //.message("Operation could not be completed due to an invalid state.")
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException exception) {
+        log.warn("BadCredentialsException occurred", exception);
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .message("Incorrect username or password")
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+
 }
