@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController//Marks this as a REST controller that returns JSON responses.
 @ControllerAdvice //Tells Spring that this class should globally handle exceptions thrown by controllers.
 @Slf4j //Lombok annotation that creates a logger instance (log) so you can write logs like log.error(...).
@@ -57,6 +59,29 @@ public class ErrorController {
                 .build();
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        log.warn("MethodArgumentNotValidException occurred, Valiadion failed", exception);
+        List<ApiErrorResponse.FieldError> fieldErrors = exception.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> {
+                    ApiErrorResponse.FieldError fe = new ApiErrorResponse.FieldError();
+                    fe.setField(error.getField());
+                    fe.setMessage(error.getDefaultMessage());
+                    return fe;
+                })
+                .toList();
+
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message("Validation failed")
+                .errors(fieldErrors)
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }
