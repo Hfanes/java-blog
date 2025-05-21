@@ -4,6 +4,7 @@ package com.hfa.blog.services.impl;
 import com.hfa.blog.domain.entities.Category;
 import com.hfa.blog.repositories.CategoryRepository;
 import com.hfa.blog.services.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,12 @@ public class CategoryServiceImpl implements CategoryService {
             }
             categoryRepository.deleteById(categoryId);
         }
+    }
+
+    @Override
+    public Category getCategoryById(UUID categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
     }
 
 }

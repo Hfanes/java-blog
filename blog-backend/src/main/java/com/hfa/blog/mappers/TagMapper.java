@@ -22,6 +22,7 @@ public interface TagMapper {
         return (int) posts.stream().filter(
                 post -> PostStatus.PUBLISHED.equals(post.getStatus()))
                         .count();
+
     }
 }
 
