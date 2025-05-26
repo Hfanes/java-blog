@@ -9,10 +9,14 @@ export default function AuthProvider({ children }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    if (storedToken) setToken(storedToken);
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+    }
   }, []);
 
   const loginAction = async (data) => {
@@ -20,6 +24,7 @@ export default function AuthProvider({ children }) {
       const response = await api.login(data);
       if (response) {
         setToken(response.jwtToken);
+        setIsAuthenticated(true);
         localStorage.setItem("token", response.jwtToken);
         router.push("/");
       }
@@ -31,11 +36,15 @@ export default function AuthProvider({ children }) {
   const logoutAction = () => {
     setUser(null);
     setToken("");
+    setIsAuthenticated(false);
+
     localStorage.removeItem("token");
     router.push("/");
   };
   return (
-    <AuthContext.Provider value={{ user, token, loginAction, logoutAction }}>
+    <AuthContext.Provider
+      value={{ user, token, loginAction, logoutAction, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

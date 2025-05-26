@@ -2,8 +2,6 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8181/api/v1";
 
-const token = localStorage.getItem("jwtToken");
-
 const api = {
   login: async (data) => {
     try {
@@ -27,43 +25,20 @@ const api = {
     }
   },
 
-  getPostById: async (id) => {
+  getCategories: async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/posts/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/categories`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching post ${id}`, error);
-      throw error;
+      console.error("Error fetching categories", error);
     }
   },
-
-  createPost: async (postData) => {
+  getTags: async () => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/posts`, postData);
+      const response = await axios.get(`${API_BASE_URL}/tags`);
       return response.data;
     } catch (error) {
-      console.error("Error creating post", error);
-      throw error;
-    }
-  },
-
-  updatePost: async (id, postData) => {
-    try {
-      const response = await axios.put(`${API_BASE_URL}/posts/${id}`, postData);
-      return response.data;
-    } catch (error) {
-      console.error(`Error updating post ${id}`, error);
-      throw error;
-    }
-  },
-
-  deletePost: async (id) => {
-    try {
-      const response = await axios.delete(`${API_BASE_URL}/posts/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error deleting post ${id}`, error);
-      throw error;
+      console.error("Error fetching categories", error);
     }
   },
 };

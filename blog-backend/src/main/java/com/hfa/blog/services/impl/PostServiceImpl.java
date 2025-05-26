@@ -38,7 +38,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getAllPosts(UUID categoryId, UUID tagId) {
         if(categoryId != null && tagId != null) {
-            Category category = categoryService.getCategoryById(tagId);
+            Category category = categoryService.getCategoryById(categoryId);
             Tag tag = tagService.getTagById(tagId);
             return postRepository.findAllByStatusAndCategoryAndTagsContaining(PostStatus.PUBLISHED, category, tag);
         }

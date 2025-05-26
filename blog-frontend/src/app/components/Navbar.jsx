@@ -6,7 +6,7 @@ import { useAuth } from "@/components/AuthProvider";
 export default function Navbar() {
   const { token, logoutAction } = useAuth();
   return (
-    <div className="fixed top-0 flex justify-between items-center w-full h-16 shadow-md px-8 cursor-pointer bg-white">
+    <div className="fixed top-0 left-0 w-full h-16 flex justify-between items-center shadow-md px-8 bg-white">
       <Link href="/">Blog Platform</Link>
       <div>
         <ul className="flex gap-4">
