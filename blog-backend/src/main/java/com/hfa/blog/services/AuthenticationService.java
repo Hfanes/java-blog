@@ -10,4 +10,5 @@ public interface AuthenticationService {
     String generateToken(UserDetails userDetails);
     UserDetails validateToken(String token);
     User register(User user);
+    User getUserById(UUID userId);
 }

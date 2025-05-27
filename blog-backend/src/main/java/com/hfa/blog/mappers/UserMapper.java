@@ -1,5 +1,6 @@
 package com.hfa.blog.mappers;
 
+import com.hfa.blog.domain.dtos.GetUserDto;
 import com.hfa.blog.domain.dtos.UserDto;
 import com.hfa.blog.domain.entities.User;
 import org.mapstruct.Mapper;
@@ -9,4 +10,5 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
     UserDto toDto(User user);
     User fromDto(UserDto userDto);
+    GetUserDto toGetUserDto(User user);
 }

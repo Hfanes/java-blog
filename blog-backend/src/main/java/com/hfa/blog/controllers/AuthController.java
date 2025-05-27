@@ -2,6 +2,7 @@ package com.hfa.blog.controllers;
 
 
 import com.hfa.blog.domain.dtos.AuthResponse;
+import com.hfa.blog.domain.dtos.GetUserDto;
 import com.hfa.blog.domain.dtos.LoginRequest;
 import com.hfa.blog.domain.dtos.UserDto;
 import com.hfa.blog.domain.entities.User;
@@ -46,5 +47,12 @@ public class AuthController {
                 .expiresIn(86400)
                 .build();
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping(path = "/{userId}")
+    public ResponseEntity<GetUserDto> getUser(@PathVariable UUID userId) {
+        User User = authenticationService.getUserById(userId);
+        GetUserDto getUserDto = userMapper.toGetUserDto(User);
+        return ResponseEntity.ok(getUserDto);
     }
 }
