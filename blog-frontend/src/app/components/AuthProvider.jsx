@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import api from "@/services/api";
+import { apiService } from "@/services/api";
 
 const AuthContext = createContext(null);
 
@@ -21,7 +21,23 @@ export default function AuthProvider({ children }) {
 
   const loginAction = async (data) => {
     try {
-      const response = await api.login(data);
+      const response = await apiService.login(data);
+      // const user = await apiService.getUser(response.userId);
+      console.log(response);
+      if (response) {
+        setToken(response.jwtToken);
+        // setUser()
+        setIsAuthenticated(true);
+        localStorage.setItem("token", response.jwtToken);
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const registerAction = async (data) => {
+    try {
+      const response = await apiService.register(data);
       if (response) {
         setToken(response.jwtToken);
         setIsAuthenticated(true);
@@ -43,7 +59,14 @@ export default function AuthProvider({ children }) {
   };
   return (
     <AuthContext.Provider
-      value={{ user, token, loginAction, logoutAction, isAuthenticated }}
+      value={{
+        user,
+        token,
+        loginAction,
+        registerAction,
+        logoutAction,
+        isAuthenticated,
+      }}
     >
       {children}
     </AuthContext.Provider>

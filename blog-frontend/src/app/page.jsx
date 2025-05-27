@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import PostList from "@/components/PostList";
-import api from "@/services/api";
+import { apiService } from "@/services/api";
 
 import { useState, useEffect } from "react";
 
@@ -23,9 +23,9 @@ export default function Home() {
         if (selectedTagId) queryParams.tagId = selectedTagId;
         const [postsResponse, categoriesResponse, tagsResponse] =
           await Promise.all([
-            api.getPosts(queryParams),
-            api.getCategories(),
-            api.getTags(),
+            apiService.getPosts(queryParams),
+            apiService.getCategories(),
+            apiService.getTags(),
           ]);
         setPosts(postsResponse);
         setCategories(categoriesResponse);

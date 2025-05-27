@@ -3,15 +3,16 @@ import React from "react";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 
-export default function Login() {
+export default function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { loginAction } = useAuth();
+  const [name, setName] = useState("");
+  const { registerAction } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      loginAction({ email, password });
+      registerAction({ email, name, password });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -19,7 +20,7 @@ export default function Login() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-4 ">
-      <h1 className="font-bold text-2xl">Sign in to your account</h1>
+      <h1 className="font-bold text-2xl">Register</h1>
       <form
         className="flex flex-col gap-2 max-w-sm w-full"
         onSubmit={handleSubmit}
@@ -36,6 +37,17 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
         ></input>
         <input
+          className="border-2 mb-4 rounded-sm p-1.5"
+          id="name"
+          name="name"
+          type="name"
+          autoComplete="name"
+          required
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        ></input>
+        <input
           className="border-2 mb-4 rounded-sm  p-1.5"
           id="password"
           name="password"
@@ -50,7 +62,7 @@ export default function Login() {
           className="border px-6 py-2 rounded self-center bg-blue-500 text-white hover:bg-blue-600 transition"
           type="submit"
         >
-          Sign in
+          Register
         </button>
       </form>
     </div>

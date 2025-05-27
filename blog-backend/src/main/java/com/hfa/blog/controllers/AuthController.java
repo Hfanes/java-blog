@@ -33,6 +33,7 @@ public class AuthController {
         AuthResponse authResponse = AuthResponse.builder()
                 .jwtToken(tokenValue)
                 .expiresIn(86400)
+                .email(userDetails.getUsername())
                 .build();
         return ResponseEntity.ok(authResponse);
     }
@@ -50,7 +51,7 @@ public class AuthController {
     }
 
     @GetMapping(path = "/{userId}")
-    public ResponseEntity<GetUserDto> getUser(@PathVariable UUID userId) {
+    public ResponseEntity<GetUserDto> getUserByEmail(@PathVariable UUID userId) {
         User User = authenticationService.getUserById(userId);
         GetUserDto getUserDto = userMapper.toGetUserDto(User);
         return ResponseEntity.ok(getUserDto);

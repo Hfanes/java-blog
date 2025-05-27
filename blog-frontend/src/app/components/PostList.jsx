@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Clock, Calendar1 } from "lucide-react";
+import { Clock, Calendar1, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function PostList({ posts }) {
@@ -30,7 +30,10 @@ export default function PostList({ posts }) {
               }}
             >
               <h2 className="mb-1">{post.title}</h2>
-              <p>by {post.author.name}</p>
+              <p className="flex items-center gap-1 mb-2">
+                <User size={16} />
+                by {post.author.name}
+              </p>
               <p className="mb-4">{post.content}</p>
               <div className="flex gap-6">
                 <div className="flex items-center gap-1">
