@@ -1,8 +1,10 @@
 package com.hfa.blog.controllers;
 
 
+import com.hfa.blog.domain.dtos.CategoryDto;
 import com.hfa.blog.domain.dtos.CreateTagsRequest;
 import com.hfa.blog.domain.dtos.TagResponse;
+import com.hfa.blog.domain.entities.Category;
 import com.hfa.blog.domain.entities.Tag;
 import com.hfa.blog.mappers.TagMapper;
 import com.hfa.blog.services.TagService;
@@ -50,5 +52,13 @@ public class TagController {
     public ResponseEntity<Void> deleteTags(@PathVariable UUID tagId){
         tagService.deleteTag(tagId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(path = "/{tagId}")
+    public ResponseEntity<TagResponse> updateTag(@PathVariable UUID tagId, @RequestBody TagResponse tagDto) {
+        Tag tagToUpdate = tagMapper.fromTagResponse(tagDto);
+        Tag updatedTag = tagService.updateTag(tagId, tagDto);
+        TagResponse updatedTagDto = tagMapper.toTagResponse(updatedTag);
+        return ResponseEntity.ok(updatedTagDto);
     }
 }

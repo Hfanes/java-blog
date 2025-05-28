@@ -1,5 +1,7 @@
 package com.hfa.blog.services.impl;
 
+import com.hfa.blog.domain.dtos.TagResponse;
+import com.hfa.blog.domain.entities.Category;
 import com.hfa.blog.domain.entities.Tag;
 import com.hfa.blog.repositories.TagRepository;
 import com.hfa.blog.services.TagService;
@@ -71,4 +73,26 @@ public class TagServiceImpl implements TagService {
         }
         return foundTags;
     }
+
+
+    @Override
+    public Tag updateTag(UUID tagId, TagResponse tagDto) {
+        if(tagDto.getId() == null)
+        {
+            throw new IllegalArgumentException("Tag does not have an ID");
+        }
+        if (!tagId.equals(tagDto.getId()))
+        {
+            throw new IllegalArgumentException("Attempting to change tag id, this is not permitted");
+        }
+        if(tagDto.getName() == null)
+        {
+            throw new IllegalArgumentException("tag name is empty");
+        }
+        Tag existingTag = getTagById(tagId);
+        existingTag.setName(tagDto.getName());
+
+        return tagRepository.save(existingTag);
+    }
+
 }

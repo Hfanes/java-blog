@@ -1,8 +1,12 @@
 package com.hfa.blog.controllers;
 
+import com.hfa.blog.domain.UpdatePostRequest;
 import com.hfa.blog.domain.dtos.CategoryDto;
 import com.hfa.blog.domain.dtos.CreateCategoryRequests;
+import com.hfa.blog.domain.dtos.PostDto;
+import com.hfa.blog.domain.dtos.UpdatePostRequestDto;
 import com.hfa.blog.domain.entities.Category;
+import com.hfa.blog.domain.entities.Post;
 import com.hfa.blog.mappers.CategoryMapper;
 import com.hfa.blog.services.CategoryService;
 import jakarta.validation.Valid;
@@ -51,5 +55,13 @@ public class CategoryController {
     {
         categoryService.deleteCategoryById(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(path = "/{categoryId}")
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable UUID categoryId, @RequestBody CategoryDto categoryDto) {
+        Category categoryToUpdate = categoryMapper.fromDto(categoryDto);
+        Category updatedCategory = categoryService.updateCategory(categoryId, categoryToUpdate);
+        CategoryDto updatedCategoryDto = categoryMapper.toDto(updatedCategory);
+        return ResponseEntity.ok(updatedCategoryDto);
     }
 }

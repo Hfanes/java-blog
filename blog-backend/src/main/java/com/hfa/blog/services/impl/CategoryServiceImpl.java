@@ -1,16 +1,18 @@
 package com.hfa.blog.services.impl;
 
 
+import com.hfa.blog.domain.UpdatePostRequest;
 import com.hfa.blog.domain.entities.Category;
+import com.hfa.blog.domain.entities.Post;
+import com.hfa.blog.domain.entities.Tag;
 import com.hfa.blog.repositories.CategoryRepository;
 import com.hfa.blog.services.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -50,6 +52,27 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryById(UUID categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
+    }
+
+    @Override
+    @Transactional
+    public Category updateCategory(UUID categoryId, Category categoryToUpdate) {
+        if(categoryToUpdate.getId() == null)
+        {
+            throw new IllegalArgumentException("Category does not have an ID");
+        }
+        if (!categoryId.equals(categoryToUpdate.getId()))
+        {
+            throw new IllegalArgumentException("Attempting to change Category id, this is not permitted");
+        }
+        if(categoryToUpdate.getName() == null)
+        {
+            throw new IllegalArgumentException("Category name is empty");
+        }
+        Category existingCategory = getCategoryById(categoryId);
+        existingCategory.setName(categoryToUpdate.getName());
+
+        return categoryRepository.save(existingCategory);
     }
 
 }

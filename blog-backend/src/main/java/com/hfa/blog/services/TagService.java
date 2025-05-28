@@ -1,6 +1,7 @@
 package com.hfa.blog.services;
 
 
+import com.hfa.blog.domain.dtos.TagResponse;
 import com.hfa.blog.domain.entities.Tag;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface TagService {
     void deleteTag(UUID tagId);
     Tag getTagById(UUID tagId);
     List<Tag> getTagByIds(Set<UUID> tagIds);
+
+    Tag updateTag(UUID tagId, TagResponse tagDto);
 }
