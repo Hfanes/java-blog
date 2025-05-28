@@ -58,10 +58,10 @@ export default function Navbar() {
               {open && (
                 <div className="absolute right-0 mt-2 w-40 bg-white border rounded-xl shadow-lg z-10">
                   <div
-                    className="px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer text-red-600"
+                    className="px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer text-blue-600"
                     onClick={logoutAction}
                   >
-                    {user}
+                    🧑 {user.name}
                   </div>
                   <Link
                     href="/posts/drafts"
@@ -73,7 +73,7 @@ export default function Navbar() {
                     className="px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer text-red-600"
                     onClick={logoutAction}
                   >
-                    Logout
+                    🚪 Logout
                   </div>
                 </div>
               )}

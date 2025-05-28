@@ -13,8 +13,11 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    if (storedToken) {
+    const storedUser = localStorage.getItem("user");
+    if (storedToken && storedUser) {
       setToken(storedToken);
+      //since its string we convert to object
+      setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
   }, []);
@@ -22,13 +25,13 @@ export default function AuthProvider({ children }) {
   const loginAction = async (data) => {
     try {
       const response = await apiService.login(data);
-      // const user = await apiService.getUser(response.userId);
-      console.log(response);
       if (response) {
         setToken(response.jwtToken);
-        // setUser()
+        setUser(response.author);
         setIsAuthenticated(true);
+        //localStorage only saves string, so we store in json string then when we get we must convert string to object in useEffect
         localStorage.setItem("token", response.jwtToken);
+        localStorage.setItem("user", JSON.stringify(response.author));
         router.push("/");
       }
     } catch (error) {
@@ -40,8 +43,10 @@ export default function AuthProvider({ children }) {
       const response = await apiService.register(data);
       if (response) {
         setToken(response.jwtToken);
+        setUser(response.author);
         setIsAuthenticated(true);
         localStorage.setItem("token", response.jwtToken);
+        localStorage.setItem("user", JSON.stringify(response.author));
         router.push("/");
       }
     } catch (error) {
@@ -53,7 +58,7 @@ export default function AuthProvider({ children }) {
     setUser(null);
     setToken("");
     setIsAuthenticated(false);
-
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
     router.push("/");
   };
