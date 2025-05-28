@@ -6,7 +6,6 @@ class ApiService {
   // Hold the singleton instance
   static instance = null;
 
-  // Private constructor (enforced by convention)
   constructor() {
     if (ApiService.instance) {
       return ApiService.instance;
@@ -16,6 +15,18 @@ class ApiService {
       baseURL: API_BASE_URL,
       // You can add headers, interceptors here if needed
     });
+    this.apiClient.interceptors.request.use(
+      (config) => {
+        if (config.requiresAuth) {
+          const token = localStorage.getItem("token");
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
 
     ApiService.instance = this;
   }
@@ -78,12 +89,96 @@ class ApiService {
     }
   }
 
+  async updateCategory(editingCategoryId, data) {
+    try {
+      const response = await this.apiClient.put(
+        `/categories/${editingCategoryId}`,
+        data,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching categories", error);
+      throw error;
+    }
+  }
+
+  async deleteCategory(categoryId) {
+    try {
+      const response = await this.apiClient.delete(
+        `/categories/${categoryId}`,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting category", error);
+      throw error;
+    }
+  }
+
+  async createCategory(name) {
+    try {
+      const response = await this.apiClient.post(
+        `/categories`,
+        name,
+        { requiresAuth: true } //token
+        //
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating category", error);
+      throw error;
+    }
+  }
+
   async getTags() {
     try {
       const response = await this.apiClient.get(`/tags`);
       return response.data;
     } catch (error) {
       console.error("Error fetching tags", error);
+      throw error;
+    }
+  }
+
+  async updateTag(editingTagId, data) {
+    try {
+      const response = await this.apiClient.put(
+        `/tags/${editingTagId}`,
+        data,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching tag", error);
+      throw error;
+    }
+  }
+
+  async deleteTag(tagId) {
+    try {
+      const response = await this.apiClient.delete(
+        `/tags/${tagId}`,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting tag", error);
+      throw error;
+    }
+  }
+
+  async createTag(name) {
+    try {
+      const response = await this.apiClient.post(
+        `/tags`,
+        name,
+        { requiresAuth: true } //token
+        //
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating tag(s)", error);
       throw error;
     }
   }
