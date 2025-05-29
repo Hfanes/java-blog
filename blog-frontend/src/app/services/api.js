@@ -67,18 +67,6 @@ class ApiService {
     }
   }
 
-  async getPosts(queryParams = {}) {
-    try {
-      const response = await this.apiClient.get(`/posts`, {
-        params: queryParams,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching posts", error);
-      throw error;
-    }
-  }
-
   async getCategories() {
     try {
       const response = await this.apiClient.get(`/categories`);
@@ -189,6 +177,44 @@ class ApiService {
       return response.data;
     } catch (error) {
       console.error("Error fetching postById", error);
+      throw error;
+    }
+  }
+
+  async getPosts(queryParams = {}) {
+    try {
+      const response = await this.apiClient.get(`/posts`, {
+        params: queryParams,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching posts", error);
+      throw error;
+    }
+  }
+
+  async updatePost(editingPostId, data) {
+    try {
+      const response = await this.apiClient.put(
+        `/posts/${editingPostId}`,
+        data,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching tag", error);
+      throw error;
+    }
+  }
+  async deletePost(postId) {
+    try {
+      const response = await this.apiClient.delete(
+        `/posts/${postId}`,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting tag", error);
       throw error;
     }
   }

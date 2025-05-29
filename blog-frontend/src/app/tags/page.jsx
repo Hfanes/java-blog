@@ -56,9 +56,7 @@ export default function tags() {
         id: editingTagId,
         name: editForm.name,
       });
-      if (!response.ok) {
-        throw new Error("Failed to update tag");
-      }
+
       // Create a new array with all the categories except the one being edited, if id matches, update the tag
       setTags(
         tags.map((tag) => (tag.id === editingTagId ? responseTagUpdated : tag))
@@ -72,11 +70,7 @@ export default function tags() {
 
   const deleteTag = async (tagId) => {
     try {
-      const response = await apiService.deleteTag(tagId);
-      if (!response.ok) {
-        throw new Error("Failed to delete tag");
-      }
-      // Remove deleted categories from list
+      await apiService.deleteTag(tagId);
       setTags(tags.filter((tag) => tag.id !== tagId));
     } catch (error) {
       console.error("Error:", error);
@@ -88,12 +82,9 @@ export default function tags() {
       const responseNewTag = await apiService.createTag({
         names: [tagName],
       });
-      if (!responseNewTag.ok) {
-        throw new Error("Failed to create tag");
-      }
+
       // Add the new tag to the list
       setTags((prevTags) => [...prevTags, responseNewTag]);
-
       setTagNames(""); // Clear input
       setIsOpen(false); // Close modal
     } catch (error) {

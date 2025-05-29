@@ -77,10 +77,7 @@ export default function categories() {
 
   const deleteCategory = async (categoryId) => {
     try {
-      const response = await apiService.deleteCategory(categoryId);
-      if (!response.ok) {
-        throw new Error("Failed to delete category");
-      }
+      await apiService.deleteCategory(categoryId);
       // Remove deleted categories from list
       setCategories(
         categories.filter((category) => category.id !== categoryId)
@@ -95,9 +92,7 @@ export default function categories() {
       const responseNewCategory = await apiService.createCategory({
         name: categoryName,
       });
-      if (!responseNewCategory.ok) {
-        throw new Error("Failed to create category");
-      }
+
       // Add the new category to the list
       setCategories((prevCategories) => [
         ...prevCategories,
