@@ -119,9 +119,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(UUID postId) {
-         Post post = getPostById(postId);
-         postRepository.delete(post);
+    public void deletePost(UUID postId, User user) {
+        Post existingPost = getPostById(postId);
+        if (!existingPost.getAuthor().getId().equals(user.getId())) {
+            throw new BadCredentialsException("You are not allowed to edit this post: " + postId);
+        }
+        postRepository.delete(existingPost);
     }
 
     private Integer calculateReadingTime(String content) {
