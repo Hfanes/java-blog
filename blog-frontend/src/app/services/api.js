@@ -27,6 +27,18 @@ class ApiService {
       },
       (error) => Promise.reject(error)
     );
+    this.apiClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+          if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
 
     ApiService.instance = this;
   }
@@ -191,6 +203,17 @@ class ApiService {
       throw error;
     }
   }
+  async getPostDrafts() {
+    try {
+      const response = await this.apiClient.get(`/posts/drafts`, {
+        requiresAuth: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching postByUser", error);
+      throw error;
+    }
+  }
 
   async getPosts(queryParams = {}) {
     try {
@@ -213,7 +236,20 @@ class ApiService {
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching tag", error);
+      console.error("Error updating post", error);
+      throw error;
+    }
+  }
+  async createPost(data) {
+    try {
+      const response = await this.apiClient.post(
+        `/posts`,
+        data,
+        { requiresAuth: true } //token
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating post", error);
       throw error;
     }
   }

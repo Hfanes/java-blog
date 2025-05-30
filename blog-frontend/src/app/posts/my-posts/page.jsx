@@ -6,6 +6,8 @@ import { Clock, Calendar1, User, ArrowLeft, Pencil, Trash } from "lucide-react";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function page() {
   const [posts, setPosts] = useState([]);
@@ -15,6 +17,7 @@ export default function page() {
   const [selectedTagId, setSelectedTagId] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { token } = useAuth();
 
   // useEffect(() => {
   //   const fetchPosts = async () => {
@@ -42,6 +45,7 @@ export default function page() {
   // }, [selectedCategoryId, selectedTagId]);
 
   useEffect(() => {
+    if (!token) return;
     const fetchPosts = async () => {
       try {
         setLoading(true);
@@ -54,23 +58,25 @@ export default function page() {
       }
     };
     fetchPosts();
-  }, []);
-  if (loading) return <div className="pt-20 text-center">Loading...</div>;
+  }, [token]);
   return (
-    <>
-      <div className="pt-10 max-w-4xl mx-auto px-4">
-        <div className="p-6 rounded border shadow bg-white">
-          <div className="flex gap-4">
-            <button
-              className="flex items-center gap-1 bg-gray-100 text-sm p-2 mb-4 rounded-md hover:bg-gray-200 transition cursor-pointer"
-              onClick={() => router.back()}
-            >
-              <ArrowLeft size={16} />
-              Back to Posts
-            </button>
-            <h1 className="text-2xl font-semibold mb-4">My Blog Posts</h1>
-          </div>
-          {/* <div className="flex gap-4 mb-4">
+    <ProtectedRoute>
+      {loading ? (
+        <div className="pt-20 text-center">Loading...</div>
+      ) : (
+        <div className="pt-10 max-w-4xl mx-auto px-4">
+          <div className="p-6 rounded border shadow bg-white">
+            <div className="flex gap-4">
+              <button
+                className="flex items-center gap-1 bg-gray-100 text-sm p-2 mb-4 rounded-md hover:bg-gray-200 transition cursor-pointer"
+                onClick={() => router.back()}
+              >
+                <ArrowLeft size={16} />
+                Back to Posts
+              </button>
+              <h1 className="text-2xl font-semibold mb-4">My Blog Posts</h1>
+            </div>
+            {/* <div className="flex gap-4 mb-4">
             <div>
               <button
                 onClick={() => setSelectedCategoryId(null)}
@@ -116,9 +122,10 @@ export default function page() {
             ))}
           </div> */}
 
-          <PostList posts={posts} />
+            <PostList posts={posts} />
+          </div>
         </div>
-      </div>
-    </>
+      )}
+    </ProtectedRoute>
   );
 }

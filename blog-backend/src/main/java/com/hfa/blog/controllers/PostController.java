@@ -40,7 +40,7 @@ public class PostController {
             @RequestParam(required = false) UUID tagId
             )
     {
-        List<Post> posts = postService.getAllPosts(categoryId, tagId);
+            List<Post> posts = postService.getAllPosts(categoryId, tagId);
         List<PostDto> postDtos = posts.stream().map(postMapper::toDto).toList();
         return ResponseEntity.ok(postDtos);
     }
