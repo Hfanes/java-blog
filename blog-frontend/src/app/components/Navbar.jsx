@@ -8,9 +8,9 @@ export default function Navbar() {
   const { user, isAuthenticated, logoutAction } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
-  const [selectedTab, setSelectedTab] = useState(null);
 
   useEffect(() => {
+    setOpen(false);
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         //if menu exists and is clicked outside
@@ -54,7 +54,7 @@ export default function Navbar() {
               🖋️ My Posts
             </Link>
             <Link
-              href="/posts/my-posts"
+              href="/posts/new"
               className="cursor-pointer bg-blue-100 text-sm p-2  rounded-md hover:bg-blue-200 transition"
             >
               + New Post
@@ -69,10 +69,7 @@ export default function Navbar() {
 
               {open && (
                 <div className="absolute right-0 mt-2 w-40 bg-white border rounded-xl shadow-lg z-10">
-                  <div
-                    className="px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer text-blue-600"
-                    onClick={logoutAction}
-                  >
+                  <div className="px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer text-blue-600">
                     🧑 {user.name}
                   </div>
                   <Link
