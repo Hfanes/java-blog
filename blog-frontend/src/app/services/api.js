@@ -162,7 +162,6 @@ class ApiService {
         `/tags`,
         name,
         { requiresAuth: true } //token
-        //
       );
       return response.data;
     } catch (error) {
@@ -177,6 +176,18 @@ class ApiService {
       return response.data;
     } catch (error) {
       console.error("Error fetching postById", error);
+      throw error;
+    }
+  }
+
+  async getPostByUser() {
+    try {
+      const response = await this.apiClient.get(`/posts/my-posts`, {
+        requiresAuth: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching postByUser", error);
       throw error;
     }
   }

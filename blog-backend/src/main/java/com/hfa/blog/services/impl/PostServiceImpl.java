@@ -12,6 +12,7 @@ import com.hfa.blog.services.CategoryService;
 import com.hfa.blog.services.PostService;
 import com.hfa.blog.services.TagService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +60,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getUserPosts(User user) {
+        return postRepository.findAllByAuthor(user);
+    }
+
+    @Override
     @Transactional
     public Post createPost(User user, CreatePostRequest createPostRequest) {
         Post newPost = new Post();
@@ -80,8 +86,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Post updatePost(UUID postId, UpdatePostRequest updatePostRequest) {
+    public Post updatePost(UUID postId, User user, UpdatePostRequest updatePostRequest) {
         Post existingPost =  postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post does not exist with id" + postId));
+        if (!existingPost.getAuthor().getId().equals(user.getId())) {
+            throw new BadCredentialsException("You are not allowed to edit this post: " + postId);
+        }
         existingPost.setTitle(updatePostRequest.getTitle());
         String postContent = updatePostRequest.getContent();
         existingPost.setContent(postContent);

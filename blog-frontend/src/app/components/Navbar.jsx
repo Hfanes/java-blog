@@ -23,7 +23,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-16 flex justify-between items-center shadow-md px-8 bg-white">
+    <div className="fixed top-0 left-0 w-full h-16 flex justify-between items-center shadow-md px-8 bg-white z-100">
       <Link href="/">Blog Platform</Link>
       <div>
         <ul className="flex gap-4">
@@ -41,12 +41,24 @@ export default function Navbar() {
       <div>
         {isAuthenticated ? (
           <div className="flex gap-4 ">
-            <button className="cursor-pointer bg-purple-100 text-sm p-2  rounded-md hover:bg-purple-200 transition">
+            <Link
+              href="/posts/drafts"
+              className="cursor-pointer bg-purple-100 text-sm p-2  rounded-md hover:bg-purple-200 transition"
+            >
               Draft Posts
-            </button>
-            <button className="cursor-pointer bg-blue-100 text-sm p-2  rounded-md hover:bg-blue-200 transition">
+            </Link>
+            <Link
+              href="/posts//my-posts"
+              className="cursor-pointer bg-blue-100 text-sm p-2  rounded-md hover:bg-blue-200 transition"
+            >
+              🖋️ My Posts
+            </Link>
+            <Link
+              href="/posts/my-posts"
+              className="cursor-pointer bg-blue-100 text-sm p-2  rounded-md hover:bg-blue-200 transition"
+            >
               + New Post
-            </button>
+            </Link>
             <div className="relative inline-block" ref={menuRef}>
               <button
                 onClick={() => setOpen(!open)}
@@ -68,6 +80,12 @@ export default function Navbar() {
                     className="block px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer"
                   >
                     🖋️ My Drafts
+                  </Link>
+                  <Link
+                    href="/posts/my-posts"
+                    className="block px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer"
+                  >
+                    🖋️ My Posts
                   </Link>
                   <div
                     className="px-4 py-2 hover:bg-gray-100 rounded-xl cursor-pointer text-red-600"

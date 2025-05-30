@@ -63,9 +63,12 @@ public class PostController {
     }
 
     @PutMapping(path = "/{postId}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable UUID postId, @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
+    public ResponseEntity<PostDto> updatePost(@PathVariable UUID postId,
+                                              @RequestAttribute UUID userId,
+                                              @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
+        User user = userService.getUserById(userId);
         UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
-        Post updatedPost = postService.updatePost(postId, updatePostRequest);
+        Post updatedPost = postService.updatePost(postId, user, updatePostRequest);
         PostDto updatedPostDto = postMapper.toDto(updatedPost);
         return ResponseEntity.ok(updatedPostDto);
     }
@@ -77,11 +80,18 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
 
+    @GetMapping(path = "/my-posts")
+    public ResponseEntity<List<PostDto>> getPostsByUser(@RequestAttribute UUID userId) {
+        User loggedInUser = userService.getUserById(userId);
+        List<Post> ownPosts = postService.getUserPosts(loggedInUser);
+        List<PostDto> postDtos = ownPosts.stream().map(postMapper::toDto).toList();
+        return ResponseEntity.ok(postDtos);
+    }
+
     @DeleteMapping(path = "/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable UUID postId) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
-
 
 }

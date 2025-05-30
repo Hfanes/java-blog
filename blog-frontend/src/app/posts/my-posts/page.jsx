@@ -2,34 +2,51 @@
 import Image from "next/image";
 import PostList from "@/components/PostList";
 import { apiService } from "@/services/api";
+import { Clock, Calendar1, User, ArrowLeft, Pencil, Trash } from "lucide-react";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function page() {
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedTagId, setSelectedTagId] = useState(null);
-
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const queryParams = {};
+  //       // if (selectedCategoryId) queryParams.categoryId = selectedCategoryId;
+  //       // if (selectedTagId) queryParams.tagId = selectedTagId;
+  //       // const [postsResponse, categoriesResponse, tagsResponse] =
+  //       //   await Promise.all([
+  //       //     apiService.getPosts(queryParams),
+  //       //     apiService.getCategories(),
+  //       //     apiService.getTags(),
+  //       //   ]);
+  //       setPosts(postsResponse);
+  //       // setCategories(categoriesResponse);
+  //       // setTags(tagsResponse);
+  //     } catch (err) {
+  //       console.error("Error fetching posts", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchPosts();
+  // }, [selectedCategoryId, selectedTagId]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const queryParams = {};
-        if (selectedCategoryId) queryParams.categoryId = selectedCategoryId;
-        if (selectedTagId) queryParams.tagId = selectedTagId;
-        const [postsResponse, categoriesResponse, tagsResponse] =
-          await Promise.all([
-            apiService.getPosts(queryParams),
-            apiService.getCategories(),
-            apiService.getTags(),
-          ]);
+        const postsResponse = await apiService.getPostByUser();
         setPosts(postsResponse);
-        setCategories(categoriesResponse);
-        setTags(tagsResponse);
       } catch (err) {
         console.error("Error fetching posts", err);
       } finally {
@@ -37,14 +54,23 @@ export default function Home() {
       }
     };
     fetchPosts();
-  }, [selectedCategoryId, selectedTagId]);
+  }, []);
   if (loading) return <div className="pt-20 text-center">Loading...</div>;
   return (
     <>
       <div className="pt-10 max-w-4xl mx-auto px-4">
         <div className="p-6 rounded border shadow bg-white">
-          <h1 className="text-2xl font-semibold mb-4">Blog Posts</h1>
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-4">
+            <button
+              className="flex items-center gap-1 bg-gray-100 text-sm p-2 mb-4 rounded-md hover:bg-gray-200 transition cursor-pointer"
+              onClick={() => router.back()}
+            >
+              <ArrowLeft size={16} />
+              Back to Posts
+            </button>
+            <h1 className="text-2xl font-semibold mb-4">My Blog Posts</h1>
+          </div>
+          {/* <div className="flex gap-4 mb-4">
             <div>
               <button
                 onClick={() => setSelectedCategoryId(null)}
@@ -81,14 +107,14 @@ export default function Home() {
                   setSelectedTagId(selectedTagId === tag.id ? null : tag.id)
                 }
                 className={`cursor-pointer p-1 rounded-lg border border-gray-200 
-                  hover:text-gray-600  transition-colors duration-200 border-b-2 ${
-                    selectedTagId === tag.id ? "bg-blue-400" : ""
-                  }`}
+                    hover:text-gray-600  transition-colors duration-200 border-b-2 ${
+                      selectedTagId === tag.id ? "bg-blue-400" : ""
+                    }`}
               >
                 {tag.name} <span>({tag.postCount})</span>
               </button>
             ))}
-          </div>
+          </div> */}
 
           <PostList posts={posts} />
         </div>

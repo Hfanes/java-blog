@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController//Marks this as a REST controller that returns JSON responses.
@@ -92,7 +93,4 @@ public class ErrorController {
                 .build();
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
-
-
-
 }
