@@ -49,7 +49,7 @@ export default function page() {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const postsResponse = await apiService.getPostDrafts();
+        const postsResponse = await ApiService.getPostDrafts();
         setPosts(postsResponse);
       } catch (err) {
         console.error("Error fetching posts", err);

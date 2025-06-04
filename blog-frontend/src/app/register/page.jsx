@@ -2,6 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
+import Link from "next/link";
 
 export default function page() {
   const [email, setEmail] = useState("");
@@ -65,6 +66,12 @@ export default function page() {
           Register
         </button>
       </form>
+      <Link
+        className="border px-6 py-2 rounded self-center bg-gray-300 hover:bg-gray-700 transition cursor-pointer"
+        href="/login"
+      >
+        Already have an account?
+      </Link>
     </div>
   );
 }

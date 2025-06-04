@@ -70,7 +70,7 @@ export default function page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const postCreated = await apiService.createPost({
+      const postCreated = await ApiService.createPost({
         title: form.title,
         content: form.content,
         status: form.status,

@@ -8,10 +8,11 @@ const AuthContext = createContext(null);
 export default function AuthProvider({ children }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => {
-    // get token (verify if its client side)
-    return typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  });
+  // const [token, setToken] = useState(() => {
+  //   // get token (verify if its client side)
+  //   return typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  // });
+  const [token, setToken] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {

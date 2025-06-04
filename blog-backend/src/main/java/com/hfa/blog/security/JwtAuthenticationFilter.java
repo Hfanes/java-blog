@@ -41,8 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { //only once 
             }
         }
         catch (Exception ex){
-        //do not throw exceptions, just dont authenticate the user
-            log.warn("Received invalid auth token");
+            //log.warn("Received invalid auth token: {}", ex.getMessage());
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\":\"Invalid or expired token\"}");
+            return; // Stop processing further
         }
         // 1. Extract and validate JWT
         // 2. Set authentication in SecurityContext

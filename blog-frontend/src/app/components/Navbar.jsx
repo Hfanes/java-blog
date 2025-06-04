@@ -3,11 +3,17 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { User } from "lucide-react";
+import { apiService } from "@/services/api";
 
 export default function Navbar() {
   const { user, isAuthenticated, logoutAction } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true); // mark client mount complete
+  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -21,6 +27,19 @@ export default function Navbar() {
     //when unmounts
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleRefresh = async () => {
+    try {
+      const data = await apiService.refresh();
+      console.log("Token refreshed!", data);
+    } catch (err) {
+      console.error("Refresh failed", err);
+    }
+  };
+
+  if (!isMounted) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="fixed top-0 left-0 w-full h-16 flex justify-between items-center shadow-md px-8 bg-white z-100">
@@ -41,6 +60,7 @@ export default function Navbar() {
       <div>
         {isAuthenticated ? (
           <div className="flex gap-4 ">
+            <button onClick={handleRefresh}>Refresh token</button>
             <Link
               href="/posts/drafts"
               className="cursor-pointer bg-purple-100 text-sm p-2  rounded-md hover:bg-purple-200 transition"
@@ -97,7 +117,7 @@ export default function Navbar() {
         ) : (
           <div className="flex gap-4">
             <Link
-              className="cursor-pointer px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
               href="/login"
             >
               Login

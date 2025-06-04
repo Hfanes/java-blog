@@ -7,6 +7,7 @@ import { useAuth } from "@/components/AuthProvider";
 
 export default function ProtectedRoute({ children }) {
   const { token } = useAuth();
+
   const router = useRouter();
   useEffect(() => {
     if (!token) {

@@ -10,10 +10,9 @@ class ApiService {
     if (ApiService.instance) {
       return ApiService.instance;
     }
-    // You can setup axios instance here if needed
     this.apiClient = axios.create({
       baseURL: API_BASE_URL,
-      // You can add headers, interceptors here if needed
+      withCredentials: true,
     });
     this.apiClient.interceptors.request.use(
       (config) => {
@@ -29,8 +28,32 @@ class ApiService {
     );
     this.apiClient.interceptors.response.use(
       (response) => response,
-      (error) => {
+      async (error) => {
+        console.log("refreshToken expired", error.response?.status);
         if (error.response?.status === 401) {
+          //TODO: 401 ? 403 ?
+          // Redirect to /refresh endpoint
+          // If refreshToken = valid -> update refreshToken & accessToken
+          // If refreshToken != valid -> login
+          try {
+            const response = await this.refresh();
+            localStorage.setItem("token", response.jwtToken);
+
+            //resend previous request with new token
+            error.config.headers[
+              "Authorization"
+            ] = `Bearer ${response.jwtToken}`;
+            return this.apiClient.request(error.config);
+          } catch (refreshError) {
+            // Refresh failed
+            localStorage.removeItem("token");
+
+            if (window.location.pathname !== "/login") {
+              window.location.href = "/login";
+            }
+            return Promise.reject(refreshError);
+          }
+        } else if (error.response?.status === 403) {
           localStorage.removeItem("token");
           if (window.location.pathname !== "/login") {
             window.location.href = "/login";
@@ -48,6 +71,20 @@ class ApiService {
       ApiService.instance = new ApiService();
     }
     return ApiService.instance;
+  }
+
+  async refresh() {
+    try {
+      //IMPORTANT to use differente axios instance because otherwise it will be an infinite loop
+      //because this is called when 401, this returns 401 and then calls this function again
+      const response = await axios.post(`${API_BASE_URL}/auth/refresh`, null, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error refreshing tokens", error);
+      throw error;
+    }
   }
 
   async login(data) {

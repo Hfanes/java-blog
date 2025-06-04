@@ -50,6 +50,7 @@ public class TagServiceImpl implements TagService {
         return savedTags;
     }
 
+    @Transactional
     @Override
     public void deleteTag(UUID tagId) {
         tagRepository.findById(tagId).ifPresent(tag -> {

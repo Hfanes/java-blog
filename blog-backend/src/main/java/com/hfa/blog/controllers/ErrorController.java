@@ -1,6 +1,8 @@
 package com.hfa.blog.controllers;
 
 import com.hfa.blog.domain.dtos.ApiErrorResponse;
+import com.hfa.blog.exceptions.RefreshTokenExpiredException;
+import com.hfa.blog.exceptions.RefreshTokenReuseDetectedException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -93,4 +95,26 @@ public class ErrorController {
                 .build();
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+
+    @ExceptionHandler(RefreshTokenExpiredException.class)
+    public ResponseEntity<ApiErrorResponse> handleRefreshTokenExpired(RefreshTokenExpiredException exception) {
+        log.warn("RefreshTokenExpiredException occurred", exception);
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.UNAUTHORIZED.value()) // 401
+                .message("Session expired. Please log in again.")
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(RefreshTokenReuseDetectedException.class)
+    public ResponseEntity<ApiErrorResponse> handleRefreshTokenReuse(RefreshTokenReuseDetectedException exception) {
+        log.warn("RefreshTokenReuseDetectedException occurred", exception);
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.FORBIDDEN.value()) // 403
+                .message("Suspicious activity detected. Please log in again.")
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
 }

@@ -10,6 +10,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function Page() {
   const { token, isAuthenticated } = useAuth();
+
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
