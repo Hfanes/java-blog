@@ -8,12 +8,12 @@ const AuthContext = createContext(null);
 export default function AuthProvider({ children }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  // const [token, setToken] = useState(() => {
-  //   // get token (verify if its client side)
-  //   return typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  // });
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(() => {
+    // Initialize token from localStorage during component creation
+    return typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -24,6 +24,7 @@ export default function AuthProvider({ children }) {
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
+    setIsLoading(false);
   }, []);
 
   const loginAction = async (data) => {
@@ -75,6 +76,7 @@ export default function AuthProvider({ children }) {
         registerAction,
         logoutAction,
         isAuthenticated,
+        isLoading,
       }}
     >
       {children}

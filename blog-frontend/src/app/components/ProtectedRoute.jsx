@@ -6,16 +6,21 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 
 export default function ProtectedRoute({ children }) {
-  const { token } = useAuth();
+  const { token, isLoading } = useAuth();
 
   const router = useRouter();
   useEffect(() => {
-    if (!token) {
+    if (!isLoading && !token) {
       router.push("/login");
     }
-  }, [token, router]);
-  if (!token) {
+  }, [token, router, isLoading]);
+
+  if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (!token) {
+    return null;
   }
 
   return children;

@@ -70,7 +70,7 @@ export default function page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const postCreated = await ApiService.createPost({
+      const postCreated = await apiService.createPost({
         title: form.title,
         content: form.content,
         status: form.status,
@@ -100,7 +100,7 @@ export default function page() {
         <div className="flex justify-center h-screen">Loading post...</div>
       )}
 
-      <div className="max-w-3xl mx-auto py-10 px-4 bg-white-400">
+      <div className="max-w-3xl mx-auto px-4 bg-white-400">
         <div className="p-3 rounded border shadow bg-white gap-2">
           <div className="flex items-center p-3">
             <button
@@ -110,7 +110,7 @@ export default function page() {
               <ArrowLeft size={16} />
               Back to Posts
             </button>
-            <h1 className="text-xl font-semibold mb-4">New Post</h1>
+            <h1 className="text-xl font-semibold mb-2">New Post</h1>
           </div>
           <form className="flex flex-col gap-4 rounded bg-white p-4">
             <label className="block font-medium">Title</label>
@@ -167,7 +167,7 @@ export default function page() {
                 </option>
               ))}
             </select>
-            <div className="flex gap-2 flex-wrap mt-2">
+            <div className="flex gap-2 flex-wrap">
               {selectedTags.map((tag) => (
                 <div
                   key={tag.id}
@@ -194,9 +194,9 @@ export default function page() {
               <option value="PUBLISHED">Published</option>
               <option value="DRAFT">Draft</option>
             </select>
-            <div className="flex justify-end gap-3 mt-4">
+            <div className="flex justify-end gap-3 mt-2">
               <button
-                className="bg-red-100 text-sm p-2 mb-4 rounded-md hover:bg-red-200 transition cursor-pointer text-red-800"
+                className="bg-red-100 text-sm p-2 mb-2 rounded-md hover:bg-red-200 transition cursor-pointer text-red-800"
                 onClick={() => {
                   router.push(`/`);
                 }}
@@ -204,7 +204,7 @@ export default function page() {
                 Cancel
               </button>
               <button
-                className="bg-blue-400 text-sm p-2 mb-4 rounded-md hover:bg-blue-500 transition cursor-pointer text-white"
+                className="bg-blue-400 text-sm p-2 rounded-md hover:bg-blue-500 transition cursor-pointer text-white"
                 type="submit"
                 onClick={handleSubmit}
               >

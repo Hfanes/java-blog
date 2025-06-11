@@ -60,7 +60,6 @@ export default function Navbar() {
       <div>
         {isAuthenticated ? (
           <div className="flex gap-4 ">
-            <button onClick={handleRefresh}>Refresh token</button>
             <Link
               href="/posts/drafts"
               className="cursor-pointer bg-purple-100 text-sm p-2  rounded-md hover:bg-purple-200 transition"
