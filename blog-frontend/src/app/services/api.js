@@ -31,7 +31,6 @@ class ApiService {
       async (error) => {
         console.log("refreshToken expired", error.response?.status);
         if (error.response?.status === 401) {
-          //TODO: 401 ? 403 ?
           // Redirect to /refresh endpoint
           // If refreshToken = valid -> update refreshToken & accessToken
           // If refreshToken != valid -> login
