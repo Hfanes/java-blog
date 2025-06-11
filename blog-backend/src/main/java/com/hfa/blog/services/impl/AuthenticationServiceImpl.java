@@ -33,8 +33,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Long accessExpiresMs = 10000L; //milliseconds 60000L
-    private final Long refreshExpiresMs = 60000L; //milliseconds 120000L
+    private final Long accessExpiresMs = 60000L; //milliseconds 60000L
+    private final Long refreshExpiresMs = 120000L; //milliseconds 120000L
     private final RefreshTokenRepository refreshTokenRepository;
 
 
